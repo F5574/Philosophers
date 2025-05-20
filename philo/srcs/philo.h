@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:17:45 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/19 20:44:58 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/05/20 20:02:56 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,24 @@ typedef struct s_philos
 	unsigned int	meals_eaten;
 	t_ctl			*ctl;
 }		t_phios;
+
+/* Function prototypes */
+
+// philo_aux.c
+void			print_str_fd(int fd, char* str);
+int				ft_atoi(const char *str);
+unsigned int	ft_gettime(void);
+int 			check_input(int argc, char *argv[]);
+int				exterminate(t_ctl *ctl);
+
+// philo_frees.c
+void			free_ctl(t_ctl *ctl);
+void			free_philos(t_ctl *ctl);
+void			free_forks(t_ctl *ctl);
+void			is_dead(t_ctl *ctl, unsigned int *i);
+void			error_thread(t_ctl *ctl);
+
+// philo.c
+int				main(int argc, char *argv[]);
 
 #endif
