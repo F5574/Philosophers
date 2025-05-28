@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:25:36 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/20 20:03:45 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:54:03 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	free_philos(t_ctl *ctl)
 	int	i;
 
 	i = -1;
-	while (++i < ctl->philos_c)
+	while (++i < (int)ctl->philos_c)
 	{
 		ctl->philos[i].my_fork = NULL;
 		ctl->philos[i].ctl = NULL;
@@ -44,13 +44,13 @@ void	free_forks(t_ctl *ctl)
 	int	i;
 
 	i = -1;
-	while (++i < ctl->philos_c)
+	while (++i < (int)ctl->philos_c)
 		pthread_mutex_destroy(&ctl->forks[i]);
 	free(ctl->forks);
 	ctl->forks = NULL;
 }
 
-void	is_dead(t_ctl *ctl, unsigned int *i)
+void	dead_msg(t_ctl *ctl, unsigned int *i)
 {
 	pthread_mutex_unlock(&ctl->life);
 	printf("%lu %d died\n", ft_gettime() - ctl->start_t,

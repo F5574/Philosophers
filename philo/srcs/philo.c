@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:35:03 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/20 20:10:32 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:52:28 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,26 @@ int	main(int argc, char *argv[])
 	t_ctl	ctl;
 
 	if (argc < 5 || argc > 6)
-		return (w_str_fd(2, "Error: Invalid number of arguments\n"), 1);
-	init_ctl(&ctl);
+		return (print_str_fd(2, "Error: Invalid number of arguments\n"), 1);
+	init_0_ctl(&ctl);
+	if (check_input(argc, argv) == -1 || init_ctl(argc, argv, &ctl) == -1
+		|| init_forks(&ctl) == -1 || init_monitor(&ctl) == -1)
+	{
+		free_ctl(&ctl);
+		return (2);
+	}
+	ctl.philos = malloc(sizeof(t_ctl) * ctl.philos_c);
+	if (!ctl.philos)
+	{
+		free_ctl(&ctl);
+		return (3);
+	}
+	create_philos(&ctl);
+	if (init_threads(&ctl) == -1)
+	{
+		free_ctl(&ctl);
+		return (4);
+	}
+	free_ctl(&ctl);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:00:51 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/20 19:58:50 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/05/28 22:08:58 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ int check_input(int argc, char *argv[])
 	int	i;
 	int	x;
 
-	i = 0;
+	i = 1;
 	while (++i < argc)
 	{
 		x = 0;
 		while (argv[i][x])
 		{
-			if (argv[i][x] <= '0' || argv[i][x] >= '9')
+			if (argv[i][x] < '0' || argv[i][x] > '9')
 				return (print_str_fd(2, "Error: Only params with numbers!"), -1);
 			else
 				x++;

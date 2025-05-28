@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:17:45 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/20 20:02:56 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:49:47 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_philos
 	unsigned int	last_meal_t;
 	unsigned int	meals_eaten;
 	t_ctl			*ctl;
-}		t_phios;
+}		t_philos;
 
 /* Function prototypes */
 
@@ -70,11 +70,40 @@ unsigned int	ft_gettime(void);
 int 			check_input(int argc, char *argv[]);
 int				exterminate(t_ctl *ctl);
 
+// philo_aux_1.c
+unsigned int	get_time_think(unsigned int philos_c, unsigned int sleep_t, unsigned int eat_t);
+int				initial_usleep(t_philos *philo);
+unsigned int	safe_printf(char *msg, t_ctl *ctl, t_philos *philo);
+void			choose_forks(t_philos *philo, pthread_mutex_t **fork_one, pthread_mutex_t **fork_two);
+unsigned int	ft_my_time(void);
+
+// philo_inits.c
+void			init_0_ctl(t_ctl *ctl);
+int				init_ctl(int argc, char *argv[], t_ctl *ctl);
+int				init_forks(t_ctl *ctl);
+int				init_monitor(t_ctl *ctl);
+void			create_philos(t_ctl *ctl);
+
+// philo_routines.c
+int				act(char *msg, t_philos *philo, unsigned int time);
+int				is_dead(t_ctl *ctl);
+int				take_forks(t_philos *philo);
+void			meals_iteration(t_philos *philo);
+void			get_time_last_meal(t_philos *philo);
+
+// philo_routines_1.c
+int				threads_union(t_ctl *ctl);
+int				init_threads(t_ctl *ctl);
+void			*death_routine(void *arg);
+void			*life_routine(void *arg);
+int				extreminate_if(t_ctl *ctl);
+void			error_pthread(t_ctl *ctl);
+
 // philo_frees.c
 void			free_ctl(t_ctl *ctl);
 void			free_philos(t_ctl *ctl);
 void			free_forks(t_ctl *ctl);
-void			is_dead(t_ctl *ctl, unsigned int *i);
+void			dead_msg(t_ctl *ctl, unsigned int *i);
 void			error_thread(t_ctl *ctl);
 
 // philo.c

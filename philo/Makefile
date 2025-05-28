@@ -1,4 +1,4 @@
-SRCS_C = philo.c
+SRCS_C = philo.c philo_aux.c philo_aux_1.c philo_frees.c philo_inits.c philo_routines.c philo_routines_1.c
 
 NAME = philo
 
@@ -16,7 +16,7 @@ OBJS_DIR = objs/
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_C))
 
-OBJS = $(addprefix $(objs), $(SRCS_C:.c=.o))
+OBJS = $(addprefix $(OBJS_DIR), $(SRCS_C:.c=.o))
 
 # for tests ----------------------------------
 
@@ -25,7 +25,7 @@ INPUT = 5 800 200 200
 all: $(NAME)
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c | $(OBJS_DIR)
-	@$(cc) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJS_DIR):
 	@mkdir -p $(OBJS_DIR)
