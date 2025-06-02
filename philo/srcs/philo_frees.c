@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:25:36 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/28 21:54:03 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:29:45 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ void	free_forks(t_ctl *ctl)
 
 void	dead_msg(t_ctl *ctl, unsigned int *i)
 {
-	printf("%lu %d died\n", ft_gettime() - ctl->start_t,
+	pthread_mutex_lock(&ctl->print);
+	printf("%lu %d died\n", ft_my_time() - ctl->start_t,
 		ctl->philos[*i].id);
+	pthread_mutex_unlock(&ctl->print);
 }
 
 void	error_thread(t_ctl *ctl)

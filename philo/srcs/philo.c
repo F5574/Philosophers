@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:35:03 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/06/02 19:23:24 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:44:59 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,18 @@ int	main(int argc, char *argv[])
 		return (3);
 	}
 	create_philos(&ctl);
+	
+	// First create all threads
 	if (init_threads(&ctl) == -1)
 	{
 		free_ctl(&ctl);
 		return (4);
 	}
+	
+	// Then wait for them to finish (join)
+	threads_union(&ctl);
+	
+	// Clean up and exit
 	free_ctl(&ctl);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 21:03:14 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/06/02 19:22:46 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:44:59 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ int	init_threads(t_ctl *ctl)
 		}
 	}
 	if (pthread_create(&ctl->monitor, NULL, &death_routine, ctl) != 0)
+	{
 		error_pthread(ctl);
-	if (threads_union(ctl) == -1)
 		return (-1);
+	}
 	return (0);
 }
 
@@ -57,6 +58,7 @@ void	*death_routine(void *arg)
 {
 	t_ctl			*ctl;
 	unsigned int	i;
+	unsigned int	time_since_last_meal;
 
 	ctl = (t_ctl *)arg;
 	while (!ctl->termination)
@@ -65,28 +67,32 @@ void	*death_routine(void *arg)
 		pthread_mutex_lock(&ctl->life);
 		while (i < ctl->philos_c)
 		{
-			if ((ctl->philos[i].last_meal_t != 0) && 
-				(ft_my_time() - ctl->philos[i].last_meal_t) > ctl->die_t)
+			if (ctl->philos[i].last_meal_t != 0)
 			{
-				ctl->termination = 1;
-				pthread_mutex_unlock(&ctl->life);
-				dead_msg(ctl, &i);
-				return (NULL);
+				time_since_last_meal = ft_my_time() - ctl->philos[i].last_meal_t;
+				if (time_since_last_meal > ctl->die_t)
+				{
+					ctl->termination = 1;
+					pthread_mutex_unlock(&ctl->life);
+					dead_msg(ctl, &i);
+					return (NULL);
+				}
 			}
 			i++;
 		}
 		if (extreminate_if(ctl))
 			break;
 		pthread_mutex_unlock(&ctl->life);
-		usleep(500);
+		
+		// Adaptive sleep based on die_time - uses less CPU when death time is large
+		if (ctl->die_t > 1000)
+			usleep(200);
+		else if (ctl->die_t > 500)
+			usleep(100);
+		else
+			usleep(50);
 	}
 	return (NULL);
-}
-
-static void	aux_unlock(pthread_mutex_t	*fork_one, pthread_mutex_t	*fork_two)
-{
-	pthread_mutex_unlock(fork_two);
-	pthread_mutex_unlock(fork_one);
 }
 
 void	*life_routine(void *arg)
@@ -94,25 +100,49 @@ void	*life_routine(void *arg)
 	t_philos		*philo;
 	pthread_mutex_t	*fork_one;
 	pthread_mutex_t	*fork_two;
+	unsigned int	cycle_count;
 
 	philo = (t_philos *)arg;
 	initial_usleep(philo);
+	cycle_count = 0;
 	while (!is_dead(philo->ctl))
 	{
+		// Special handling for tight timing cases after the first cycle
+		if (cycle_count > 0 && philo->ctl->die_t < 4 * philo->ctl->eat_t)
+		{
+			// Add a very small wait between cycles for tightly timed scenarios
+			// to break potential deadlocks
+			usleep(philo->id * 2);
+		}
+		
 		if (!take_forks(philo))
-			break ;
+			break;
 		choose_forks(philo, &fork_one, &fork_two);
 		get_time_last_meal(philo);
 		if (!act("is eating\n", philo, philo->ctl->eat_t))
 		{
-			aux_unlock(fork_one, fork_two);
-			break ;
+			pthread_mutex_unlock(fork_two);
+			pthread_mutex_unlock(fork_one);
+			break;
 		}
 		meals_iteration(philo);
-		aux_unlock(fork_one, fork_two);
-		if (!act("is sleeping\n", philo, philo->ctl->sleep_t) || 
-			!act("is thinking\n", philo, 0))
-			break ;
+		pthread_mutex_unlock(fork_two);
+		pthread_mutex_unlock(fork_one);
+		
+		if (!act("is sleeping\n", philo, philo->ctl->sleep_t))
+			break;
+		
+		// For borderline timing cases, make sure thinking doesn't take too long
+		if (philo->ctl->die_t < 4 * philo->ctl->eat_t)
+		{
+			// Just announce thinking without any delay
+			if (!safe_printf("is thinking\n", philo->ctl, philo))
+				cycle_count++;
+			else
+				break;
+		}
+		else if (!act("is thinking\n", philo, 0))
+			break;
 	}
 	return (NULL);
 }
@@ -145,7 +175,10 @@ int	extreminate_if(t_ctl *ctl)
 	if (all_ate)
 	{
 		ctl->termination = 1;
-		pthread_mutex_unlock(&ctl->life);
+		pthread_mutex_unlock(&ctl->life); // Release life mutex before printing
+		pthread_mutex_lock(&ctl->print);
+		printf("All philosophers have eaten at least %d times\n", ctl->meals_n);
+		pthread_mutex_unlock(&ctl->print);
 		return (1);
 	}
 	return (0);

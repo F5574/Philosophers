@@ -20,7 +20,7 @@ OBJS = $(addprefix $(OBJS_DIR), $(SRCS_C:.c=.o))
 
 # for tests ----------------------------------
 
-INPUT = 5 800 200 200 
+INPUT = 5 800 200 200 10
 
 all: $(NAME)
 

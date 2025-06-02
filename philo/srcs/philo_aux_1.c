@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 18:49:02 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/06/02 19:22:52 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:36:27 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,31 @@ unsigned int	get_time_think(unsigned int philos_c,
 
 int	initial_usleep(t_philos *philo)
 {
-	if (philo->ctl->philos_c % 2 == 0)
+	// Critical optimization for borderline timing cases (death_time ~3-4x eat_time)
+	if (philo->ctl->die_t < 4 * philo->ctl->eat_t)
 	{
+		// For borderline cases, use a more aggressive staggering approach
 		if (philo->id % 2 == 0)
-			usleep(philo->ctl->eat_t);
+		{
+			// Even philosophers wait less to get their turn sooner
+			usleep(philo->ctl->eat_t * 100); // Just 10% of eat_time
+		}
+		else if (philo->ctl->philos_c % 2 == 1 && philo->id == philo->ctl->philos_c)
+		{
+			// Last philosopher in odd-numbered group waits a bit more
+			usleep(philo->ctl->eat_t * 150); // 15% of eat_time
+		}
+		return (1);
 	}
-	else
+	
+	// Regular staggering for more relaxed timing constraints
+	if (philo->id % 2 == 0)
 	{
-		if (philo->id == philo->ctl->philos_c)
-			usleep(philo->ctl->eat_t * 2);
-		else if (philo->id % 2 == 0)
-			usleep(philo->ctl->eat_t);
+		usleep(philo->ctl->eat_t * 300); // 30% of eat_time
+	}
+	else if (philo->ctl->philos_c % 2 == 1 && philo->id == philo->ctl->philos_c)
+	{
+		usleep(philo->ctl->eat_t * 400); // 40% of eat_time
 	}
 	return (1);
 }
