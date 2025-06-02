@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 18:49:02 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/28 22:05:11 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:22:52 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ unsigned int	safe_printf(char *msg, t_ctl *ctl, t_philos *philo)
 	pthread_mutex_lock(&ctl->life);
 	if (ctl->termination == 0)
 	{
-		printf("%lu %d ", ft_my_time() - philo->ctl->start_t, philo->id);
-		printf("%s", msg);
+		printf("%lu %d %s", ft_my_time() - philo->ctl->start_t, philo->id, msg);
 		pthread_mutex_unlock(&ctl->life);
 		pthread_mutex_unlock(&ctl->print);
 		return (0);

@@ -52,7 +52,6 @@ void	free_forks(t_ctl *ctl)
 
 void	dead_msg(t_ctl *ctl, unsigned int *i)
 {
-	pthread_mutex_unlock(&ctl->life);
 	printf("%lu %d died\n", ft_gettime() - ctl->start_t,
 		ctl->philos[*i].id);
 }

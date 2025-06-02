@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 21:03:14 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/28 22:05:25 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:22:46 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,21 +63,22 @@ void	*death_routine(void *arg)
 	{
 		i = 0;
 		pthread_mutex_lock(&ctl->life);
-		while (ctl->philos_c > i++)
+		while (i < ctl->philos_c)
 		{
-			if ((ctl->philos[i].last_meal_t) != 0 && (ft_my_time()
-					- ctl->philos[i].last_meal_t) > ctl->die_t)
+			if ((ctl->philos[i].last_meal_t != 0) && 
+				(ft_my_time() - ctl->philos[i].last_meal_t) > ctl->die_t)
 			{
 				ctl->termination = 1;
+				pthread_mutex_unlock(&ctl->life);
 				dead_msg(ctl, &i);
 				return (NULL);
 			}
+			i++;
 		}
 		if (extreminate_if(ctl))
 			break;
-		else
-			usleep(500);
 		pthread_mutex_unlock(&ctl->life);
+		usleep(500);
 	}
 	return (NULL);
 }
@@ -144,6 +145,7 @@ int	extreminate_if(t_ctl *ctl)
 	if (all_ate)
 	{
 		ctl->termination = 1;
+		pthread_mutex_unlock(&ctl->life);
 		return (1);
 	}
 	return (0);

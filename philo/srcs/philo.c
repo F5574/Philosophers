@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:35:03 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/28 21:52:28 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:23:24 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int argc, char *argv[])
 		free_ctl(&ctl);
 		return (2);
 	}
-	ctl.philos = malloc(sizeof(t_ctl) * ctl.philos_c);
+	ctl.philos = malloc(sizeof(t_philos) * ctl.philos_c);
 	if (!ctl.philos)
 	{
 		free_ctl(&ctl);

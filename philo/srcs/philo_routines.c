@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 20:57:33 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/28 21:04:24 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:23:26 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,22 @@
 
 int	act(char *msg, t_philos *philo, unsigned int time)
 {
-	unsigned int	elapsed_time;
-	unsigned int	interval;
+	unsigned int	start_time;
+	unsigned int	current_time;
 
-	elapsed_time = 0;
-	interval = 10;
 	if (is_dead(philo->ctl))
 		return (0);
 	if (safe_printf(msg, philo->ctl, philo))
 		return (0);
-	while (elapsed_time < time)
+	start_time = ft_my_time();
+	while (1)
 	{
-		usleep(interval * 1000);
-		elapsed_time += interval;
 		if (is_dead(philo->ctl))
 			return (0);
+		current_time = ft_my_time();
+		if ((current_time - start_time) >= time)
+			break;
+		usleep(500);
 	}
 	return (1);
 }
@@ -73,8 +74,6 @@ void	meals_iteration(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->ctl->meals);
 	philo->meals_eaten++;
-	if (philo->meals_eaten == philo->ctl->meals_n)
-		philo->ctl->eaten_n++;
 	pthread_mutex_unlock(&philo->ctl->meals);
 }
 
