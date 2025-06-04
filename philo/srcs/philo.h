@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:17:45 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/28 21:49:47 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:12:19 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <limits.h>
 
 typedef struct s_philos	t_philos;
 
@@ -48,7 +49,6 @@ typedef struct s_ctl
 	int				meals_flag;
 	int				life_flag;
 	int				print_flag;
-	
 }		t_ctl;
 
 typedef struct s_philos
@@ -64,17 +64,19 @@ typedef struct s_philos
 /* Function prototypes */
 
 // philo_aux.c
-void			print_str_fd(int fd, char* str);
+void			print_str_fd(int fd, char *str);
 int				ft_atoi(const char *str);
 unsigned int	ft_gettime(void);
-int 			check_input(int argc, char *argv[]);
+int				check_input(int argc, char *argv[]);
 int				exterminate(t_ctl *ctl);
 
 // philo_aux_1.c
-unsigned int	get_time_think(unsigned int philos_c, unsigned int sleep_t, unsigned int eat_t);
+unsigned int	get_time_think(unsigned int philos_c,
+					unsigned int sleep_t, unsigned int eat_t);
 int				initial_usleep(t_philos *philo);
 unsigned int	safe_printf(char *msg, t_ctl *ctl, t_philos *philo);
-void			choose_forks(t_philos *philo, pthread_mutex_t **fork_one, pthread_mutex_t **fork_two);
+void			choose_forks(t_philos *philo,
+					pthread_mutex_t **fork_one, pthread_mutex_t **fork_two);
 unsigned int	ft_my_time(void);
 
 // philo_inits.c

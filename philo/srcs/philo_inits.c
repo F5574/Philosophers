@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:05:14 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/05/28 22:00:01 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:54:27 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ int	init_ctl(int argc, char *argv[], t_ctl *ctl)
 		return (-1);
 	}
 	else
-	ctl->think_t = get_time_think(ctl->philos_c,
-		ctl->sleep_t, ctl->eat_t);
+		ctl->think_t = get_time_think(ctl->philos_c,
+				ctl->sleep_t, ctl->eat_t);
 	return (0);
 }
 
-int init_forks(t_ctl *ctl)
+int	init_forks(t_ctl *ctl)
 {
 	int	i;
 
@@ -68,7 +68,7 @@ int init_forks(t_ctl *ctl)
 		return (print_str_fd(2, "ERROR: Failed creating forks\n"), -1);
 	while ((int)ctl->philos_c > ++i)
 	{
-		if(pthread_mutex_init(&ctl->forks[i], NULL) != 0)
+		if (pthread_mutex_init(&ctl->forks[i], NULL) != 0)
 			return (print_str_fd(2, "ERROR: Failed creating forks\n"), -1);
 	}
 	return (0);
@@ -78,7 +78,7 @@ int	init_monitor(t_ctl *ctl)
 {
 	if (pthread_mutex_init(&ctl->life, NULL) != 0)
 	{
-		return (print_str_fd(2, "ERROR: Failed creating mutex(life)\n"), -1);;
+		return (print_str_fd(2, "ERROR: Failed creating mutex(life)\n"), -1);
 	}
 	ctl->life_flag = 1;
 	if (pthread_mutex_init(&ctl->print, NULL) != 0)

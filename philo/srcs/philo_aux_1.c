@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 18:49:02 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/06/02 19:36:27 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:56:07 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,32 +31,19 @@ unsigned int	get_time_think(unsigned int philos_c,
 
 int	initial_usleep(t_philos *philo)
 {
-	// Critical optimization for borderline timing cases (death_time ~3-4x eat_time)
 	if (philo->ctl->die_t < 4 * philo->ctl->eat_t)
 	{
-		// For borderline cases, use a more aggressive staggering approach
 		if (philo->id % 2 == 0)
-		{
-			// Even philosophers wait less to get their turn sooner
-			usleep(philo->ctl->eat_t * 100); // Just 10% of eat_time
-		}
-		else if (philo->ctl->philos_c % 2 == 1 && philo->id == philo->ctl->philos_c)
-		{
-			// Last philosopher in odd-numbered group waits a bit more
-			usleep(philo->ctl->eat_t * 150); // 15% of eat_time
-		}
+			usleep(philo->ctl->eat_t * 100);
+		else if (philo->ctl->philos_c % 2 == 1
+			&& philo->id == philo->ctl->philos_c)
+			usleep(philo->ctl->eat_t * 150);
 		return (1);
 	}
-	
-	// Regular staggering for more relaxed timing constraints
 	if (philo->id % 2 == 0)
-	{
-		usleep(philo->ctl->eat_t * 300); // 30% of eat_time
-	}
+		usleep(philo->ctl->eat_t * 300);
 	else if (philo->ctl->philos_c % 2 == 1 && philo->id == philo->ctl->philos_c)
-	{
-		usleep(philo->ctl->eat_t * 400); // 40% of eat_time
-	}
+		usleep(philo->ctl->eat_t * 400);
 	return (1);
 }
 
@@ -79,15 +66,14 @@ unsigned int	safe_printf(char *msg, t_ctl *ctl, t_philos *philo)
 void	choose_forks(t_philos *philo, pthread_mutex_t **fork_one,
 	pthread_mutex_t **fork_two)
 {
-	unsigned int left_fork_idx;
-	unsigned int right_fork_idx;
+	unsigned int	left_fork_idx;
+	unsigned int	right_fork_idx;
 
 	left_fork_idx = philo->id - 1;
 	if (philo->id == philo->ctl->philos_c)
 		right_fork_idx = 0;
 	else
 		right_fork_idx = philo->id;
-
 	if (&philo->ctl->forks[left_fork_idx] > &philo->ctl->forks[right_fork_idx])
 	{
 		*fork_one = &philo->ctl->forks[right_fork_idx];

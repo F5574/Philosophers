@@ -1,4 +1,4 @@
-SRCS_C = philo.c philo_aux.c philo_aux_1.c philo_frees.c philo_inits.c philo_routines.c philo_routines_1.c
+SRCS_C = philo.c philo_aux.c philo_aux_1.c philo_frees.c philo_inits.c philo_routines.c philo_routines_1.c philo_routines_2.c
 
 NAME = philo
 

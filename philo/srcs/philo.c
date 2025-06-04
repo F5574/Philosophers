@@ -6,7 +6,7 @@
 /*   By: gvon-ah- <gvon-ah-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:35:03 by gvon-ah-          #+#    #+#             */
-/*   Updated: 2025/06/02 19:44:59 by gvon-ah-         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:51:08 by gvon-ah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,14 @@ int	main(int argc, char *argv[])
 	init_0_ctl(&ctl);
 	if (check_input(argc, argv) == -1 || init_ctl(argc, argv, &ctl) == -1
 		|| init_forks(&ctl) == -1 || init_monitor(&ctl) == -1)
-	{
-		free_ctl(&ctl);
-		return (2);
-	}
+		return (free_ctl(&ctl), 2);
 	ctl.philos = malloc(sizeof(t_philos) * ctl.philos_c);
 	if (!ctl.philos)
-	{
-		free_ctl(&ctl);
-		return (3);
-	}
+		return (free_ctl(&ctl), 3);
 	create_philos(&ctl);
-	
-	// First create all threads
 	if (init_threads(&ctl) == -1)
-	{
-		free_ctl(&ctl);
-		return (4);
-	}
-	
-	// Then wait for them to finish (join)
+		return (free_ctl(&ctl), 4);
 	threads_union(&ctl);
-	
-	// Clean up and exit
 	free_ctl(&ctl);
 	return (0);
 }
